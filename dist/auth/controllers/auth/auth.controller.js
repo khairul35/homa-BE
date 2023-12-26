@@ -30,7 +30,7 @@ let AuthController = class AuthController {
     async login(loginCredential) {
         const initialUser = await this.userService.findUserByUsername(loginCredential.username);
         if (!initialUser?.id)
-            throw new common_1.HttpException('Wrong Username!', common_1.HttpStatus.UNAUTHORIZED);
+            throw new common_1.HttpException('Wrong Username!', common_1.HttpStatus.BAD_REQUEST);
         const isPasswordPassed = await new Promise((resolve, reject) => {
             (0, bcrypt_1.compare)(loginCredential.password, initialUser.hashedPassword, (err, result) => {
                 if (err) {
@@ -42,7 +42,7 @@ let AuthController = class AuthController {
             });
         });
         if (!isPasswordPassed)
-            throw new common_1.HttpException('Wrong Password!', common_1.HttpStatus.UNAUTHORIZED);
+            throw new common_1.HttpException('Wrong Password!', common_1.HttpStatus.BAD_REQUEST);
         const accessToken = await jwt.sign({
             id: initialUser.id,
             username: initialUser.username,
@@ -52,7 +52,7 @@ let AuthController = class AuthController {
             firstName: initialUser.firstName,
             lastName: initialUser.lastName,
             lastLoginDate: Date.now(),
-        }, SECRET_KEY, { expiresIn: '60m' });
+        }, SECRET_KEY, { expiresIn: '1440m' });
         const refreshToken = await jwt.sign({
             id: initialUser.id,
             username: initialUser.username,
@@ -71,7 +71,7 @@ let AuthController = class AuthController {
     }
     ;
     async refreshToken(body) {
-        const decoded = (0, decode_token_1.decodeAccessToken)(body.refreshToken);
+        const decoded = await (0, decode_token_1.decodeAccessToken)(body.refreshToken);
         const user = await this.userService.findUserById(decoded.id);
         const accessToken = await jwt.sign({
             id: user.id,
@@ -82,7 +82,7 @@ let AuthController = class AuthController {
             firstName: user.firstName,
             lastName: user.lastName,
             lastLoginDate: Date.now(),
-        }, SECRET_KEY, { expiresIn: '60m' });
+        }, SECRET_KEY, { expiresIn: '1440m' });
         const newRefreshToken = await jwt.sign({
             id: user.id,
             username: user.username,
@@ -101,13 +101,13 @@ let AuthController = class AuthController {
     }
     ;
     async logOut(accessToken) {
-        const decoded = (0, decode_token_1.decodeAccessToken)(accessToken);
+        const decoded = await (0, decode_token_1.decodeAccessToken)(accessToken);
         await this.authService.logOut(accessToken, decoded.id);
         return 'Successfully Logged Out';
     }
     ;
     async logOutAllDevice(accessToken) {
-        const decoded = (0, decode_token_1.decodeAccessToken)(accessToken);
+        const decoded = await (0, decode_token_1.decodeAccessToken)(accessToken);
         await this.authService.logOutAllDeviceByUser(decoded.id);
         return 'Successfully Logged Out';
     }

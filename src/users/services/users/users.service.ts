@@ -11,29 +11,44 @@ export class UsersService {
     @InjectRepository(User) private UserRepository: Repository<User>,
   ) {}
 
-  async findUsers() {
-    return (await this.UserRepository.find()).map(UserMapper);
+  async findUsers(orgId: number) {
+    const users = await this.UserRepository
+    .createQueryBuilder('u')
+    .select('u.*')
+    .addSelect('uo.role_id')
+    .innerJoin('UserOrganization', 'uo', 'uo.user_id = u.id AND uo.organization_id = :orgId', { orgId })
+    .where('u.deleted_date IS NULL')
+    .getRawMany();
+    return users.map(user => UserMapper(user));
   }
 
+
   async findUserById(id: number) {
-    return UserMapper(await this.UserRepository.findOne({ where: { id } }));
+    return UserMapper(await this.UserRepository.findOne({ where: { id, deleted_date: null } }));
   }
 
   async findUserByUsername(username: string) {
-    return UserMapper(await this.UserRepository.findOne({ where: { username } }));
+    return UserMapper(await this.UserRepository.findOne({ where: { username, deleted_date: null } }));
   }
 
-  createUser(userDetails: CreateUserParams) {
+  async createUser(userDetails: CreateUserParams) {
     const newUser = this.UserRepository.create({ ...userDetails });
-    return this.UserRepository.save(newUser);
+    const { id } = await this.UserRepository.save(newUser);
+    return await this.findUserById(id);
   }
 
-  updateUser(id: number, userDetails: UpdateUserParams) {
-    const updatedUser = this.UserRepository.update({ id }, { ...userDetails });
-    return updatedUser;
+  async updateUser(id: number, userDetails: UpdateUserParams) {
+    await this.UserRepository.update({ id }, { ...userDetails });
+    return await this.findUserById(id);
+  }
+
+  async updateCurrentOrganization(id: number, organizationId: number) {
+    const updatedUser = this.UserRepository.update({ id }, { current_organization: organizationId });
+    return await this.findUserById(id);
   }
 
   deleteUser(id: number) {
-    return this.UserRepository.delete({ id });
+    /** Soft Delete */
+    return this.UserRepository.update({ id }, { deleted_date: new Date() });
   }
 }

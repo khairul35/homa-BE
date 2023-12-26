@@ -4,18 +4,20 @@ import { Repository } from 'typeorm';
 export declare class UsersService {
     private UserRepository;
     constructor(UserRepository: Repository<User>);
-    findUsers(): Promise<{
+    findUsers(orgId: number): Promise<{
         id: any;
         registrationDate: any;
         lastLoginDate: any;
         username: any;
         hashedPassword: any;
         email: any;
-        role: any;
+        roleId: any;
+        role: string;
         accountStatus: any;
         firstName: any;
         lastName: any;
-        address: any;
+        phoneNumber: any;
+        currentOrganization: any;
     }[]>;
     findUserById(id: number): Promise<{
         id: any;
@@ -24,11 +26,13 @@ export declare class UsersService {
         username: any;
         hashedPassword: any;
         email: any;
-        role: any;
+        roleId: any;
+        role: string;
         accountStatus: any;
         firstName: any;
         lastName: any;
-        address: any;
+        phoneNumber: any;
+        currentOrganization: any;
     }>;
     findUserByUsername(username: string): Promise<{
         id: any;
@@ -37,13 +41,58 @@ export declare class UsersService {
         username: any;
         hashedPassword: any;
         email: any;
-        role: any;
+        roleId: any;
+        role: string;
         accountStatus: any;
         firstName: any;
         lastName: any;
-        address: any;
+        phoneNumber: any;
+        currentOrganization: any;
     }>;
-    createUser(userDetails: CreateUserParams): Promise<User>;
-    updateUser(id: number, userDetails: UpdateUserParams): Promise<import("typeorm").UpdateResult>;
-    deleteUser(id: number): Promise<import("typeorm").DeleteResult>;
+    createUser(userDetails: CreateUserParams): Promise<{
+        id: any;
+        registrationDate: any;
+        lastLoginDate: any;
+        username: any;
+        hashedPassword: any;
+        email: any;
+        roleId: any;
+        role: string;
+        accountStatus: any;
+        firstName: any;
+        lastName: any;
+        phoneNumber: any;
+        currentOrganization: any;
+    }>;
+    updateUser(id: number, userDetails: UpdateUserParams): Promise<{
+        id: any;
+        registrationDate: any;
+        lastLoginDate: any;
+        username: any;
+        hashedPassword: any;
+        email: any;
+        roleId: any;
+        role: string;
+        accountStatus: any;
+        firstName: any;
+        lastName: any;
+        phoneNumber: any;
+        currentOrganization: any;
+    }>;
+    updateCurrentOrganization(id: number, organizationId: number): Promise<{
+        id: any;
+        registrationDate: any;
+        lastLoginDate: any;
+        username: any;
+        hashedPassword: any;
+        email: any;
+        roleId: any;
+        role: string;
+        accountStatus: any;
+        firstName: any;
+        lastName: any;
+        phoneNumber: any;
+        currentOrganization: any;
+    }>;
+    deleteUser(id: number): Promise<import("typeorm").UpdateResult>;
 }

@@ -1,0 +1,31 @@
+export declare class Organization {
+    id: number;
+    name: string;
+    trading_name: string;
+    industry: string;
+    organization_type: string;
+    registration_number: string;
+    organization_description: string;
+    postal_address_line1: string;
+    postal_address_line2: string;
+    postal_address_city: string;
+    postal_address_state: string;
+    postal_address_postal_code: string;
+    physical_address_line1: string;
+    physical_address_line2: string;
+    physical_address_city: string;
+    physical_address_state: string;
+    physical_address_postal_code: string;
+    physical_is_postal: boolean;
+    email: string;
+    website: string;
+    facebook: string;
+    twitter: string;
+    linkedin: string;
+    telephone_country_code: string;
+    telephone_number: string;
+    fax_country_code: string;
+    fax_number: string;
+    mobile_country_code: string;
+    mobile_number: string;
+}

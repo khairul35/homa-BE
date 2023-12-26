@@ -3,11 +3,12 @@ export declare class User {
     username: string;
     password_hash: string;
     email: string;
-    role: string;
     account_status: string;
     registration_date: Date;
     last_login_date: Date;
     first_name: string;
     last_name: string;
-    address: string;
+    phone_number: string;
+    current_organization: number;
+    deleted_date: Date;
 }

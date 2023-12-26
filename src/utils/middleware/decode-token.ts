@@ -23,20 +23,24 @@ interface DecodedRefreshToken {
   accessToken?: string; // The accessToken property is optional
 }
 
-export function decodeAccessToken(token: string): DecodedToken | null {
+export async function decodeAccessToken(token: string): Promise<DecodedToken> {
     try {
-        if (!token) throw new HttpException('No Access Token', HttpStatus.UNAUTHORIZED)
-        const decoded: DecodedToken | any = jwt.verify(token, SECRET_KEY);
+        if (!token) throw new HttpException('No Access Token', HttpStatus.UNAUTHORIZED);
+        const accessToken = token.split(' ')[1];
+        console.log(accessToken);
+        const decoded: DecodedToken | any = await jwt.verify(accessToken, SECRET_KEY);
+        console.log(decoded)
         return decoded;
     } catch (error) {
+        console.log('s', error)
         throw new HttpException(error, HttpStatus.UNAUTHORIZED);
     }
 };
 
-export function decodeRefreshToken(token: string): DecodedRefreshToken | null {
+export async function decodeRefreshToken(token: string): Promise<DecodedRefreshToken> {
     try {
         if (!token) throw new HttpException('No Access Token', HttpStatus.UNAUTHORIZED)
-        const decoded: DecodedToken | any = jwt.verify(token, SECRET_KEY);
+        const decoded: DecodedToken | any = await jwt.verify(token, SECRET_KEY);
         return decoded;
     } catch (error) {
         throw new HttpException(error, HttpStatus.UNAUTHORIZED);

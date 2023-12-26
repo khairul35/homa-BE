@@ -16,6 +16,6 @@ interface DecodedRefreshToken {
     lastLoginDate: number;
     accessToken?: string;
 }
-export declare function decodeAccessToken(token: string): DecodedToken | null;
-export declare function decodeRefreshToken(token: string): DecodedRefreshToken | null;
+export declare function decodeAccessToken(token: string): Promise<DecodedToken>;
+export declare function decodeRefreshToken(token: string): Promise<DecodedRefreshToken>;
 export {};

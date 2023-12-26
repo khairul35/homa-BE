@@ -26,7 +26,7 @@ export class AuthController {
   @Post('login')
   async login(@Body() loginCredential: LogInDto) {
     const initialUser = await this.userService.findUserByUsername(loginCredential.username);
-    if (!initialUser?.id) throw new HttpException('Wrong Username!', HttpStatus.UNAUTHORIZED);
+    if (!initialUser?.id) throw new HttpException('Wrong Username!', HttpStatus.BAD_REQUEST);
   
     const isPasswordPassed = await new Promise((resolve, reject) => {
         compare(loginCredential.password, initialUser.hashedPassword, (err, result) => {
@@ -37,7 +37,7 @@ export class AuthController {
             }
         });
     });
-    if (!isPasswordPassed) throw new HttpException('Wrong Password!', HttpStatus.UNAUTHORIZED);
+    if (!isPasswordPassed) throw new HttpException('Wrong Password!', HttpStatus.BAD_REQUEST);
 
     /** Generate Access Token expired every 1 hour */
     const accessToken = await jwt.sign(
@@ -52,7 +52,7 @@ export class AuthController {
         lastLoginDate: Date.now(),
       },
       SECRET_KEY,
-      { expiresIn: '60m' },
+      { expiresIn: '1440m' },
     );
     /** Generate Refresh Token */
     const refreshToken = await jwt.sign(
@@ -79,7 +79,7 @@ export class AuthController {
 
   @Post('refresh-token')
   async refreshToken(@Body() body: RefreshTokenDto) {
-    const decoded = decodeAccessToken(body.refreshToken);
+    const decoded = await decodeAccessToken(body.refreshToken);
     const user = await this.userService.findUserById(decoded.id);
 
     /** Generate Access Token expired every 1 hour */
@@ -95,7 +95,7 @@ export class AuthController {
         lastLoginDate: Date.now(),
       },
       SECRET_KEY,
-      { expiresIn: '60m' },
+      { expiresIn: '1440m' },
     );
 
     /** Generate Refresh Token */
@@ -123,14 +123,14 @@ export class AuthController {
 
   @Post('logout')
   async logOut(@Headers('authorization') accessToken: string) {
-    const decoded = decodeAccessToken(accessToken);
+    const decoded = await decodeAccessToken(accessToken);
     await this.authService.logOut(accessToken, decoded.id);
     return 'Successfully Logged Out';
   };
 
   @Post('logout/all-device')
   async logOutAllDevice(@Headers('authorization') accessToken: string) {
-    const decoded = decodeAccessToken(accessToken);
+    const decoded = await decodeAccessToken(accessToken);
     await this.authService.logOutAllDeviceByUser(decoded.id);
     return 'Successfully Logged Out';
   };

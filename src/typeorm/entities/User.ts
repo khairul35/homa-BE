@@ -15,9 +15,6 @@ export class User {
   email: string;
 
   @Column()
-  role: string;
-
-  @Column()
   account_status: string;
 
   @Column()
@@ -33,5 +30,11 @@ export class User {
   last_name: string;
 
   @Column({ nullable: true })
-  address: string;
+  phone_number: string;
+
+  @Column()
+  current_organization: number;
+
+  @Column({ nullable: true })
+  deleted_date: Date;
 }

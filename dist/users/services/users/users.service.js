@@ -22,25 +22,37 @@ let UsersService = class UsersService {
     constructor(UserRepository) {
         this.UserRepository = UserRepository;
     }
-    async findUsers() {
-        return (await this.UserRepository.find()).map(User_2.UserMapper);
+    async findUsers(orgId) {
+        const users = await this.UserRepository
+            .createQueryBuilder('u')
+            .select('u.*')
+            .addSelect('uo.role_id')
+            .innerJoin('UserOrganization', 'uo', 'uo.user_id = u.id AND uo.organization_id = :orgId', { orgId })
+            .where('u.deleted_date IS NULL')
+            .getRawMany();
+        return users.map(user => (0, User_2.UserMapper)(user));
     }
     async findUserById(id) {
-        return (0, User_2.UserMapper)(await this.UserRepository.findOne({ where: { id } }));
+        return (0, User_2.UserMapper)(await this.UserRepository.findOne({ where: { id, deleted_date: null } }));
     }
     async findUserByUsername(username) {
-        return (0, User_2.UserMapper)(await this.UserRepository.findOne({ where: { username } }));
+        return (0, User_2.UserMapper)(await this.UserRepository.findOne({ where: { username, deleted_date: null } }));
     }
-    createUser(userDetails) {
+    async createUser(userDetails) {
         const newUser = this.UserRepository.create({ ...userDetails });
-        return this.UserRepository.save(newUser);
+        const { id } = await this.UserRepository.save(newUser);
+        return await this.findUserById(id);
     }
-    updateUser(id, userDetails) {
-        const updatedUser = this.UserRepository.update({ id }, { ...userDetails });
-        return updatedUser;
+    async updateUser(id, userDetails) {
+        await this.UserRepository.update({ id }, { ...userDetails });
+        return await this.findUserById(id);
+    }
+    async updateCurrentOrganization(id, organizationId) {
+        const updatedUser = this.UserRepository.update({ id }, { current_organization: organizationId });
+        return await this.findUserById(id);
     }
     deleteUser(id) {
-        return this.UserRepository.delete({ id });
+        return this.UserRepository.update({ id }, { deleted_date: new Date() });
     }
 };
 exports.UsersService = UsersService;

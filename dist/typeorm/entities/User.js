@@ -33,10 +33,6 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], User.prototype, "role", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
 ], User.prototype, "account_status", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
@@ -57,7 +53,15 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
-], User.prototype, "address", void 0);
+], User.prototype, "phone_number", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], User.prototype, "current_organization", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Date)
+], User.prototype, "deleted_date", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)({ name: 'Users' })
 ], User);

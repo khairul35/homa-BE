@@ -5,9 +5,11 @@ export declare const UserMapper: (data: any) => {
     username: any;
     hashedPassword: any;
     email: any;
-    role: any;
+    roleId: any;
+    role: string;
     accountStatus: any;
     firstName: any;
     lastName: any;
-    address: any;
+    phoneNumber: any;
+    currentOrganization: any;
 };

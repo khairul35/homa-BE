@@ -16,35 +16,44 @@ exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
 const CreateUser_dto_1 = require("../../dto/CreateUser.dto");
 const users_service_1 = require("../../services/users/users.service");
+const organization_service_1 = require("../../../organization/services/organization/organization.service");
 const bcrypt_1 = require("bcrypt");
 const UpdateUser_dto_1 = require("../../dto/UpdateUser.dto");
+const decode_token_1 = require("../../../utils/middleware/decode-token");
 let UsersController = class UsersController {
-    constructor(userService) {
+    constructor(userService, organizationService) {
         this.userService = userService;
+        this.organizationService = organizationService;
     }
-    async getUsers() {
-        const users = await this.userService.findUsers();
+    async getUsers(accessToken) {
+        const decoded = await (0, decode_token_1.decodeAccessToken)(accessToken);
+        const user = await this.userService.findUserById(decoded.id);
+        const users = await this.userService.findUsers(user.currentOrganization);
         return users;
     }
     async getUserById(id) {
         return await this.userService.findUserById(id);
     }
-    async createUser(createUserDto) {
+    async createUser(accessToken, createUserDto) {
+        const decoded = await (0, decode_token_1.decodeAccessToken)(accessToken);
+        const user = await this.userService.findUserById(decoded.id);
         const salt = 10;
         const hashedPassword = await (0, bcrypt_1.hash)(createUserDto.password, salt);
         const params = {
             username: createUserDto.username,
             password_hash: hashedPassword,
             email: createUserDto.email,
-            role: 'user',
             account_status: 'active',
             registration_date: new Date(),
             last_login_date: null,
             first_name: createUserDto.firstName,
             last_name: createUserDto.lastName,
-            address: createUserDto.address,
+            phone_number: createUserDto.phoneNumber,
+            current_organization: user.currentOrganization,
         };
-        this.userService.createUser(params);
+        const res = await this.userService.createUser(params);
+        await this.organizationService.assignOrganizationToUser(res.id, user.currentOrganization, createUserDto.roleId);
+        return res;
     }
     async updateUserById(id, updateUserDto) {
         const params = {
@@ -52,7 +61,7 @@ let UsersController = class UsersController {
             email: updateUserDto.email,
             first_name: updateUserDto.firstName,
             last_name: updateUserDto.lastName,
-            address: updateUserDto.address,
+            phone_number: updateUserDto.phoneNumber,
         };
         return await this.userService.updateUser(id, params);
     }
@@ -63,8 +72,9 @@ let UsersController = class UsersController {
 exports.UsersController = UsersController;
 __decorate([
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Headers)('authorization')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getUsers", null);
 __decorate([
@@ -76,9 +86,10 @@ __decorate([
 ], UsersController.prototype, "getUserById", null);
 __decorate([
     (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)()),
+    __param(0, (0, common_1.Headers)('authorization')),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [CreateUser_dto_1.CreateUserDto]),
+    __metadata("design:paramtypes", [String, CreateUser_dto_1.CreateUserDto]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "createUser", null);
 __decorate([
@@ -97,7 +108,8 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "deleteUserById", null);
 exports.UsersController = UsersController = __decorate([
-    (0, common_1.Controller)('api/users'),
-    __metadata("design:paramtypes", [users_service_1.UsersService])
+    (0, common_1.Controller)('api/user'),
+    __metadata("design:paramtypes", [users_service_1.UsersService,
+        organization_service_1.OrganizationService])
 ], UsersController);
 //# sourceMappingURL=users.controller.js.map

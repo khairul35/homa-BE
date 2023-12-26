@@ -45,6 +45,21 @@ $ yarn run start:dev
 $ yarn run start:prod
 ```
 
+## Create new Module
+
+```bash
+
+# create module
+$ nest g module <module>
+
+# create controller
+$ nest g controller /<module>/controller/<module>
+
+# Create services
+$ nest g service /<module>/services/<module>
+
+```
+
 ## Test
 
 ```bash
