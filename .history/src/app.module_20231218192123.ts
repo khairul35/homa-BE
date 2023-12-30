@@ -9,11 +9,6 @@ import { AuthModule } from './auth/auth.module';
 import { OrganizationModule } from './organization/organization.module';
 import { Organization } from './typeorm/entities/Organization';
 import { UserOrganization } from './typeorm/entities/UserOrganization';
-import { Contacts } from './typeorm/entities/Contacts';
-import { BillingAddress } from './typeorm/entities/BillingAddress';
-import { DeliveryAddress } from './typeorm/entities/DeliveryAddress';
-import { PhoneNumber } from './typeorm/entities/PhoneNumber';
-import { PrimaryPersons } from './typeorm/entities/PrimaryPersons';
 @Module({
   imports: [
     // Configuring TypeOrm with mysql
@@ -24,17 +19,7 @@ import { PrimaryPersons } from './typeorm/entities/PrimaryPersons';
       username: 'admin',
       password: 'Noneedpassword23!',
       database: 'Production',
-      entities: [
-        User,
-        Auth,
-        Organization,
-        UserOrganization,
-        Contacts,
-        BillingAddress,
-        DeliveryAddress,
-        PhoneNumber,
-        PrimaryPersons
-      ],
+      entities: [User, Auth, Organization, UserOrganization],
       synchronize: false,
     }),
     UsersModule,

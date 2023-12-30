@@ -18,6 +18,11 @@ const auth_module_1 = require("./auth/auth.module");
 const organization_module_1 = require("./organization/organization.module");
 const Organization_1 = require("./typeorm/entities/Organization");
 const UserOrganization_1 = require("./typeorm/entities/UserOrganization");
+const Contacts_1 = require("./typeorm/entities/Contacts");
+const BillingAddress_1 = require("./typeorm/entities/BillingAddress");
+const DeliveryAddress_1 = require("./typeorm/entities/DeliveryAddress");
+const PhoneNumber_1 = require("./typeorm/entities/PhoneNumber");
+const PrimaryPersons_1 = require("./typeorm/entities/PrimaryPersons");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -31,7 +36,17 @@ exports.AppModule = AppModule = __decorate([
                 username: 'admin',
                 password: 'Noneedpassword23!',
                 database: 'Production',
-                entities: [User_1.User, Auth_1.Auth, Organization_1.Organization, UserOrganization_1.UserOrganization],
+                entities: [
+                    User_1.User,
+                    Auth_1.Auth,
+                    Organization_1.Organization,
+                    UserOrganization_1.UserOrganization,
+                    Contacts_1.Contacts,
+                    BillingAddress_1.BillingAddress,
+                    DeliveryAddress_1.DeliveryAddress,
+                    PhoneNumber_1.PhoneNumber,
+                    PrimaryPersons_1.PrimaryPersons
+                ],
                 synchronize: false,
             }),
             users_module_1.UsersModule,

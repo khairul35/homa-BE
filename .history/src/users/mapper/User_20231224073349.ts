@@ -6,7 +6,7 @@ export const UserMapper = (data) => {
         username: data?.username || null,
         hashedPassword: data?.password_hash || null,
         email: data?.email || null,
-        roleId: data?.role_id || null,
+        roleId: data?.role_role || null,
         role: getRole(data?.role_id || null),
         accountStatus: data?.account_status || null,
         firstName: data?.first_name || null,
