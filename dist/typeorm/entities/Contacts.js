@@ -11,10 +11,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Contacts = void 0;
 const typeorm_1 = require("typeorm");
-const PrimaryPersons_1 = require("./PrimaryPersons");
-const PhoneNumber_1 = require("./PhoneNumber");
-const BillingAddress_1 = require("./BillingAddress");
-const DeliveryAddress_1 = require("./DeliveryAddress");
+const ContactPrimaryPersons_1 = require("./ContactPrimaryPersons");
+const ContactPhoneNumber_1 = require("./ContactPhoneNumber");
+const ContactBillingAddress_1 = require("./ContactBillingAddress");
+const ContactDeliveryAddress_1 = require("./ContactDeliveryAddress");
 let Contacts = class Contacts {
 };
 exports.Contacts = Contacts;
@@ -55,32 +55,44 @@ __decorate([
     __metadata("design:type", String)
 ], Contacts.prototype, "registration_number", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: 'datetime', nullable: true }),
+    __metadata("design:type", Date)
+], Contacts.prototype, "deletedDate", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' }),
+    __metadata("design:type", Date)
+], Contacts.prototype, "createdDate", void 0);
+__decorate([
     (0, typeorm_1.Column)({ type: 'text' }),
     __metadata("design:type", String)
 ], Contacts.prototype, "notes", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => PrimaryPersons_1.PrimaryPersons, primaryPerson => primaryPerson.contact),
+    (0, typeorm_1.OneToMany)(() => ContactPrimaryPersons_1.ContactPrimaryPersons, primaryPerson => primaryPerson.contact),
     __metadata("design:type", Array)
-], Contacts.prototype, "primaryPersons", void 0);
+], Contacts.prototype, "contactPrimaryPersons", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => PhoneNumber_1.PhoneNumber, phoneNumber => phoneNumber.contact),
+    (0, typeorm_1.OneToMany)(() => ContactPhoneNumber_1.ContactPhoneNumber, phoneNumber => phoneNumber.contact),
     __metadata("design:type", Array)
-], Contacts.prototype, "phoneNumbers", void 0);
+], Contacts.prototype, "contactPhoneNumber", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => BillingAddress_1.BillingAddress, billingAddress => billingAddress.contact, { nullable: true }),
+    (0, typeorm_1.OneToOne)(() => ContactBillingAddress_1.ContactBillingAddress, billingAddress => billingAddress.contact, { nullable: true }),
     (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", BillingAddress_1.BillingAddress)
-], Contacts.prototype, "billingAddress", void 0);
+    __metadata("design:type", ContactBillingAddress_1.ContactBillingAddress)
+], Contacts.prototype, "contactBillingAddress", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => DeliveryAddress_1.DeliveryAddress, deliveryAddress => deliveryAddress.contact, { nullable: true }),
+    (0, typeorm_1.OneToOne)(() => ContactDeliveryAddress_1.ContactDeliveryAddress, deliveryAddress => deliveryAddress.contact, { nullable: true }),
     (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", DeliveryAddress_1.DeliveryAddress)
-], Contacts.prototype, "deliveryAddress", void 0);
+    __metadata("design:type", ContactDeliveryAddress_1.ContactDeliveryAddress)
+], Contacts.prototype, "contactDeliveryAddress", void 0);
 __decorate([
     (0, typeorm_1.Column)({ default: false }),
     __metadata("design:type", Boolean)
 ], Contacts.prototype, "is_billing_same_as_deliver", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], Contacts.prototype, "organization_id", void 0);
 exports.Contacts = Contacts = __decorate([
-    (0, typeorm_1.Entity)()
+    (0, typeorm_1.Entity)({ name: 'Contacts' })
 ], Contacts);
 //# sourceMappingURL=Contacts.js.map

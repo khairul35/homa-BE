@@ -1,7 +1,7 @@
-import { PrimaryPersons } from './PrimaryPersons';
-import { PhoneNumber } from './PhoneNumber';
-import { BillingAddress } from './BillingAddress';
-import { DeliveryAddress } from './DeliveryAddress';
+import { ContactPrimaryPersons } from './ContactPrimaryPersons';
+import { ContactPhoneNumber } from './ContactPhoneNumber';
+import { ContactBillingAddress } from './ContactBillingAddress';
+import { ContactDeliveryAddress } from './ContactDeliveryAddress';
 export declare class Contacts {
     id: number;
     contact_name: string;
@@ -12,10 +12,13 @@ export declare class Contacts {
     type: string;
     website: string;
     registration_number: string;
+    deletedDate: Date;
+    createdDate: Date;
     notes: string;
-    primaryPersons: PrimaryPersons[];
-    phoneNumbers: PhoneNumber[];
-    billingAddress: BillingAddress;
-    deliveryAddress: DeliveryAddress;
+    contactPrimaryPersons: ContactPrimaryPersons[];
+    contactPhoneNumber: ContactPhoneNumber[];
+    contactBillingAddress: ContactBillingAddress;
+    contactDeliveryAddress: ContactDeliveryAddress;
     is_billing_same_as_deliver: boolean;
+    organization_id: number;
 }
