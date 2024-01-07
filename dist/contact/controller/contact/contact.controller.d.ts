@@ -10,8 +10,8 @@ export declare class ContactController {
     findAll(accessToken: string): Promise<any>;
     findById(contactId: number): Promise<any>;
     createContact(accessToken: string, body: CreateContactDto): Promise<any>;
+    updateContact(accessToken: string, body: CreateContactDto, contactId: number): Promise<any>;
     updateBillingAddress(body: Partial<UpdateBillingAddressDto>, accessToken: string, contactId: number): Promise<any>;
     updateDeliveryAddress(body: Partial<UpdateDeliveryAddressDto>, accessToken: string, contactId: number): Promise<any>;
-    updateContact(accessToken: string, body: CreateContactDto, contactId: number): Promise<any>;
     deleteContact(contactId: number): Promise<string>;
 }

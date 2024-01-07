@@ -60,22 +60,6 @@ let ContactController = class ContactController {
         return await this.contactService.findContactById(contact?.id);
     }
     ;
-    async updateBillingAddress(body, accessToken, contactId) {
-        if (!contactId)
-            throw new common_1.HttpException('contactId is required', common_1.HttpStatus.BAD_REQUEST);
-        const decoded = await (0, decode_token_1.decodeAccessToken)(accessToken);
-        const user = await this.userService.findUserById(decoded.id);
-        await this.contactService.createBillingAddress(contactId, body);
-        return await this.contactService.findAllContact(user.currentOrganization);
-    }
-    async updateDeliveryAddress(body, accessToken, contactId) {
-        if (!contactId)
-            throw new common_1.HttpException('contactId is required', common_1.HttpStatus.BAD_REQUEST);
-        const decoded = await (0, decode_token_1.decodeAccessToken)(accessToken);
-        const user = await this.userService.findUserById(decoded.id);
-        await this.contactService.createDeliveryAddress(contactId, body);
-        return await this.contactService.findAllContact(user.currentOrganization);
-    }
     async updateContact(accessToken, body, contactId) {
         if (!contactId)
             throw new common_1.HttpException('contactId is required', common_1.HttpStatus.BAD_REQUEST);
@@ -100,6 +84,22 @@ let ContactController = class ContactController {
         return await this.contactService.findContactById(contact?.id);
     }
     ;
+    async updateBillingAddress(body, accessToken, contactId) {
+        if (!contactId)
+            throw new common_1.HttpException('contactId is required', common_1.HttpStatus.BAD_REQUEST);
+        const decoded = await (0, decode_token_1.decodeAccessToken)(accessToken);
+        const user = await this.userService.findUserById(decoded.id);
+        await this.contactService.createBillingAddress(contactId, body);
+        return await this.contactService.findAllContact(user.currentOrganization);
+    }
+    async updateDeliveryAddress(body, accessToken, contactId) {
+        if (!contactId)
+            throw new common_1.HttpException('contactId is required', common_1.HttpStatus.BAD_REQUEST);
+        const decoded = await (0, decode_token_1.decodeAccessToken)(accessToken);
+        const user = await this.userService.findUserById(decoded.id);
+        await this.contactService.createDeliveryAddress(contactId, body);
+        return await this.contactService.findAllContact(user.currentOrganization);
+    }
     async deleteContact(contactId) {
         if (!contactId)
             throw new common_1.HttpException('contactId is required', common_1.HttpStatus.BAD_REQUEST);
@@ -131,22 +131,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ContactController.prototype, "createContact", null);
 __decorate([
-    (0, common_1.Put)('billing-address/:contactId'),
-    __param(1, (0, common_1.Headers)('authorization')),
-    __param(2, (0, common_1.Param)('contactId', common_1.ParseIntPipe)),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, Number]),
-    __metadata("design:returntype", Promise)
-], ContactController.prototype, "updateBillingAddress", null);
-__decorate([
-    (0, common_1.Put)('delivery-address/:contactId'),
-    __param(1, (0, common_1.Headers)('authorization')),
-    __param(2, (0, common_1.Param)('contactId', common_1.ParseIntPipe)),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, Number]),
-    __metadata("design:returntype", Promise)
-], ContactController.prototype, "updateDeliveryAddress", null);
-__decorate([
     (0, common_1.Put)(':contactId'),
     __param(0, (0, common_1.Headers)('authorization')),
     __param(2, (0, common_1.Param)('contactId', common_1.ParseIntPipe)),
@@ -155,6 +139,22 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ContactController.prototype, "updateContact", null);
 __decorate([
+    (0, common_1.Put)(':contactId/billing-address'),
+    __param(1, (0, common_1.Headers)('authorization')),
+    __param(2, (0, common_1.Param)('contactId', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String, Number]),
+    __metadata("design:returntype", Promise)
+], ContactController.prototype, "updateBillingAddress", null);
+__decorate([
+    (0, common_1.Put)(':contactId/delivery-address'),
+    __param(1, (0, common_1.Headers)('authorization')),
+    __param(2, (0, common_1.Param)('contactId', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String, Number]),
+    __metadata("design:returntype", Promise)
+], ContactController.prototype, "updateDeliveryAddress", null);
+__decorate([
     (0, common_1.Delete)(':contactId'),
     __param(0, (0, common_1.Param)('contactId', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
@@ -162,7 +162,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ContactController.prototype, "deleteContact", null);
 exports.ContactController = ContactController = __decorate([
-    (0, common_1.Controller)('contact'),
+    (0, common_1.Controller)('api/contact'),
     __metadata("design:paramtypes", [contact_service_1.ContactService,
         users_service_1.UsersService])
 ], ContactController);

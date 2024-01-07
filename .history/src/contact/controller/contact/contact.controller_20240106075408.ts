@@ -59,6 +59,38 @@ export class ContactController {
         return await this.contactService.findContactById(contact?.id);
     };
 
+    @Put('billing-address/:contactId')
+    async updateBillingAddress(
+        body: Partial<UpdateBillingAddressDto>,
+        @Headers('authorization') accessToken: string,
+        @Param('contactId', ParseIntPipe) contactId: number
+    ) {
+        if (!contactId) throw new HttpException('contactId is required', HttpStatus.BAD_REQUEST);
+
+        /** Find Current User */
+        const decoded = await decodeAccessToken(accessToken);
+        const user = await this.userService.findUserById(decoded.id);
+
+        await this.contactService.createBillingAddress(contactId, body);
+        return await this.contactService.findAllContact(user.currentOrganization);
+    }
+
+    @Put('delivery-address/:contactId')
+    async updateDeliveryAddress(
+        body: Partial<UpdateDeliveryAddressDto>,
+        @Headers('authorization') accessToken: string,
+        @Param('contactId', ParseIntPipe) contactId: number
+    ) {
+        if (!contactId) throw new HttpException('contactId is required', HttpStatus.BAD_REQUEST);
+
+        /** Find Current User */
+        const decoded = await decodeAccessToken(accessToken);
+        const user = await this.userService.findUserById(decoded.id);
+
+        await this.contactService.createDeliveryAddress(contactId, body);
+        return await this.contactService.findAllContact(user.currentOrganization);
+    }
+
     @Put(':contactId')
     async updateContact(
         @Headers('authorization') accessToken: string,
@@ -89,38 +121,6 @@ export class ContactController {
         await this.contactService.createContactPrimaryPersons(contact?.id, body?.contactPrimaryPerson);
         return await this.contactService.findContactById(contact?.id);
     };
-
-    @Put(':contactId/billing-address')
-    async updateBillingAddress(
-        body: Partial<UpdateBillingAddressDto>,
-        @Headers('authorization') accessToken: string,
-        @Param('contactId', ParseIntPipe) contactId: number
-    ) {
-        if (!contactId) throw new HttpException('contactId is required', HttpStatus.BAD_REQUEST);
-
-        /** Find Current User */
-        const decoded = await decodeAccessToken(accessToken);
-        const user = await this.userService.findUserById(decoded.id);
-
-        await this.contactService.createBillingAddress(contactId, body);
-        return await this.contactService.findAllContact(user.currentOrganization);
-    }
-
-    @Put(':contactId/delivery-address')
-    async updateDeliveryAddress(
-        body: Partial<UpdateDeliveryAddressDto>,
-        @Headers('authorization') accessToken: string,
-        @Param('contactId', ParseIntPipe) contactId: number
-    ) {
-        if (!contactId) throw new HttpException('contactId is required', HttpStatus.BAD_REQUEST);
-
-        /** Find Current User */
-        const decoded = await decodeAccessToken(accessToken);
-        const user = await this.userService.findUserById(decoded.id);
-
-        await this.contactService.createDeliveryAddress(contactId, body);
-        return await this.contactService.findAllContact(user.currentOrganization);
-    }
 
     @Delete(':contactId')
     async deleteContact(@Param('contactId', ParseIntPipe) contactId: number) {
